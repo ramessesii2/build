@@ -37,11 +37,7 @@ spec:
   - name: dockerfile
     value: .docker/waiter/Dockerfile
   - name: hermetic
-    value: "true"
-  - name: prefetch-input
-    # --gomod-vendor-check - if the vendor/ directory does not exist, do the same thing as gomod-vendor.
-    # Otherwise, call go mod vendor and verify that nothing changed in the vendor/ directory. If anything did change, raise an error.
-    value: '{"packages": [{"type": "gomod"}], "flags": ["gomod-vendor-check"]}'
+    value: "false"
   - name: build-source-image
     value: "true"
   pipelineSpec:

@@ -18,9 +18,7 @@ RUN go version
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on go build -a -mod=vendor -ldflags="-s -w" -o openshift-builds-waiter ./cmd/waiter
 
 # --- start build stage #2
-# RPM dependencies can't be fetched hermetically with Cachi2
-# Using UBI 9 which already includes necessary tar package
-FROM registry.access.redhat.com/ubi9/ubi:9.4@sha256:763f30167f92ec2af02bf7f09e75529de66e98f05373b88bef3c631cdcc39ad8
+FROM registry.access.redhat.com/ubi9/ubi-minimal:9.4@sha256:73f7dcacb460dad137a58f24668470a5a2e47378838a0190eef0ab532c6e8998
 
 LABEL \
     com.redhat.component="openshift-builds-waiter" \
@@ -34,6 +32,9 @@ LABEL \
     io.openshift.tags="builds,waiter"
 
 RUN \
+  microdnf --assumeyes --nodocs install tar && \
+  microdnf clean all && \
+  rm -rf /var/cache/yum && \
   echo 'nonroot:x:1000:1000:nonroot:/:/sbin/nologin' > /etc/passwd && \
   echo 'nonroot:x:1000:' > /etc/group && \
   mkdir /.docker && \
