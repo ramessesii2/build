@@ -1,5 +1,5 @@
 # --- start build stage #1
-FROM registry.access.redhat.com/ubi9/go-toolset:1.21@sha256:5c948cdfd0132e982426bc9d3a81eeae66871080ef274abdde1a4a8303509188 AS builder
+FROM registry.access.redhat.com/ubi9/go-toolset:1.21@sha256:d128c3d36878251f039606f144ef2608746c3203708b722295e6c571df1d8613 AS builder
 
 # Copy the Go Modules manifests
 COPY go.mod go.mod
@@ -25,7 +25,7 @@ FROM registry.access.redhat.com/ubi9/ubi:9.4@sha256:763f30167f92ec2af02bf7f09e75
 LABEL \
     com.redhat.component="openshift-builds-git-cloner" \
     name="openshift-builds/git-cloner" \
-    version=${CI_CONTAINER_VERSION} \
+    version="v1.1.0" \
     summary="Red Hat OpenShift Builds Git Cloner" \
     maintainer="openshift-builds@redhat.com" \
     description="Red Hat OpenShift Builds Git Cloner" \
@@ -40,6 +40,7 @@ RUN \
   mkdir /.ssh && chown 1000:1000 /.ssh
 
 COPY --from=builder /opt/app-root/src/openshift-builds-git-cloner .
+COPY LICENSE /licenses/
 
 ENTRYPOINT ["./openshift-builds-git-cloner"]
 
